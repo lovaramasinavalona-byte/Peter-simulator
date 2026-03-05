@@ -3,57 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SwiftSim Elite 🚀 - Mobile</title>
+    <title>SwiftSim Elite 🚀 - Mobile Edition</title>
     <style>
-        :root { --primary: #2c3e50; --accent: #3498db; --success: #27ae60; --danger: #e74c3c; --warning: #f39c12; --bg: #f0f2f5; }
+        :root { --primary: #2c3e50; --accent: #3498db; --success: #27ae60; --danger: #e74c3c; --warning: #f39c12; }
         
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--bg); display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            margin: 0; 
+            background: #f0f2f5; 
+            display: flex; 
+            flex-direction: column; 
+            height: 100vh; 
+            overflow: hidden; 
+        }
 
-        /* KPI Bar optimisée pour mobile */
-        .kpi-bar { background: #1a252f; color: white; padding: 8px; display: flex; justify-content: space-around; font-size: 0.75em; border-bottom: 2px solid var(--accent); }
-        .kpi-value { display: block; font-size: 1.3em; font-weight: bold; color: var(--warning); text-align: center; }
+        /* Barre de KPI Compacte */
+        .kpi-bar { 
+            background: #1a252f; 
+            color: white; 
+            padding: 8px 5px; 
+            display: flex; 
+            justify-content: space-around; 
+            font-size: 0.75em; 
+            border-bottom: 2px solid var(--accent); 
+        }
+        .kpi-value { display: block; font-size: 1.1em; font-weight: bold; color: var(--warning); text-align: center; }
 
-        header { background: var(--primary); color: white; padding: 10px; font-size: 0.9em; text-align: center; }
+        header { 
+            background: var(--primary); 
+            color: white; 
+            padding: 10px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 8px;
+            align-items: center;
+        }
+
+        /* Conteneur Principal avec gestion des onglets */
+        main { flex-grow: 1; position: relative; overflow: hidden; display: flex; flex-direction: column; }
         
-        /* Menu de sélection scénario adapté */
-        .scenario-picker { background: #fff; padding: 8px; border-bottom: 1px solid #ddd; display: flex; gap: 5px; }
-        select { flex-grow: 1; padding: 8px; border-radius: 5px; font-size: 14px; }
-        .btn-launch { background: var(--primary); color: white; border: none; padding: 8px 12px; border-radius: 5px; font-weight: bold; }
+        .tab-content { 
+            display: none; 
+            flex-direction: column; 
+            height: 100%; 
+            padding: 10px; 
+            box-sizing: border-box; 
+            overflow-y: auto;
+        }
+        .tab-content.active { display: flex; }
 
-        /* Conteneur principal avec onglets */
-        main { flex-grow: 1; position: relative; overflow-y: auto; display: flex; flex-direction: column; }
-        
-        .tab-content { display: none; padding: 10px; height: 100%; box-sizing: border-box; }
-        .tab-content.active { display: flex; flex-direction: column; }
+        .panel { 
+            background: white; 
+            border-radius: 8px; 
+            display: flex; 
+            flex-direction: column; 
+            border: 1px solid #ddd; 
+            height: 100%;
+        }
 
-        .panel { background: white; border-radius: 8px; flex-grow: 1; display: flex; flex-direction: column; border: 1px solid #ddd; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .panel-header { background: #f8f9fa; padding: 10px; font-weight: bold; border-bottom: 1px solid #eee; font-size: 0.9em; }
-
-        /* Chat Window */
-        #chat-window { flex-grow: 1; padding: 15px; overflow-y: auto; background: white; display: flex; flex-direction: column; gap: 10px; min-height: 200px; }
-        .msg { max-width: 85%; padding: 10px; border-radius: 10px; font-size: 0.9em; line-height: 1.4; }
+        /* Chat Window spécifique Mobile */
+        #chat-window { flex-grow: 1; padding: 12px; overflow-y: auto; background: white; display: flex; flex-direction: column; gap: 8px; }
+        .msg { max-width: 85%; padding: 10px; border-radius: 12px; font-size: 0.9em; line-height: 1.4; }
         .msg.client { background: #eee; align-self: flex-start; border-left: 4px solid #ccc; }
         .msg.agent { background: var(--accent); color: white; align-self: flex-end; }
-        .msg.system { background: #fff3cd; color: #856404; align-self: center; font-size: 0.75em; padding: 5px 15px; border-radius: 20px; border: 1px solid #ffeeba; }
+        .msg.system { background: #fff3cd; color: #856404; align-self: center; font-size: 0.75em; padding: 5px 12px; border-radius: 20px; text-align: center; }
 
-        /* Saisie tactile */
-        .input-area { padding: 10px; border-top: 1px solid #eee; background: #fff; }
-        textarea { width: 100%; height: 50px; padding: 10px; border-radius: 5px; border: 1px solid #ddd; font-size: 16px; box-sizing: border-box; resize: none; }
-        .btn-send { width: 100%; margin-top: 5px; background: var(--success); color: white; border: none; padding: 12px; border-radius: 5px; font-weight: bold; }
+        /* Zone de saisie adaptée aux pouces */
+        .input-area { padding: 10px; border-top: 1px solid #eee; background: white; }
+        textarea { 
+            width: 100%; 
+            height: 50px; 
+            padding: 10px; 
+            border-radius: 8px; 
+            border: 1px solid #ddd; 
+            resize: none; 
+            box-sizing: border-box; 
+            font-size: 16px; /* Empêche le zoom auto sur iOS */
+        }
+        .btn-send { 
+            width: 100%; 
+            margin-top: 8px; 
+            background: var(--success); 
+            color: white; 
+            border: none; 
+            padding: 12px; 
+            border-radius: 8px; 
+            font-weight: bold; 
+            cursor: pointer; 
+        }
 
-        /* Aide et Étapes */
-        .step-item { padding: 8px; margin-bottom: 5px; border-radius: 4px; background: #f9f9f9; border-left: 3px solid #ccc; font-size: 0.8em; }
+        /* Processus & Hints */
+        .step-item { padding: 8px; margin-bottom: 5px; border-radius: 5px; background: #f9f9f9; border-left: 3px solid #ccc; font-size: 0.8em; }
         .step-active { background: #e3f2fd; border-left-color: var(--accent); font-weight: bold; }
         .step-done { background: #e8f5e9; border-left-color: var(--success); opacity: 0.7; }
-        .hint-box { background: #fff9c4; color: #7f8c0d; padding: 10px; border-radius: 5px; font-size: 0.8em; border: 1px solid #fbc02d; margin-top: 10px; }
+        .hint-box { background: #fff9c4; color: #7f8c0d; padding: 10px; border-radius: 5px; font-size: 0.85em; border: 1px solid #fbc02d; margin-top: 10px; }
 
-        /* Navigation Mobile (Bas d'écran) */
-        nav.mobile-tabs { display: flex; background: #fff; border-top: 2px solid #ddd; }
-        .tab-btn { flex: 1; padding: 12px 5px; border: none; background: none; font-size: 0.75em; font-weight: bold; color: #666; cursor: pointer; }
-        .tab-btn.active { color: var(--accent); border-top: 3px solid var(--accent); background: #f9f9f9; }
+        /* Barre de Navigation Mobile (Bottom Tabs) */
+        .nav-tabs { 
+            display: flex; 
+            background: #1a252f; 
+            border-top: 1px solid var(--accent); 
+        }
+        .tab-btn { 
+            flex: 1; 
+            padding: 15px 5px; 
+            color: #95a5a6; 
+            background: none; 
+            border: none; 
+            font-size: 0.7em; 
+            font-weight: bold; 
+            text-transform: uppercase;
+        }
+        .tab-btn.active { color: white; background: var(--accent); }
 
-        /* BO Results mobile */
-        #boResults { margin-top: 10px; }
+        select { width: 100%; padding: 8px; border-radius: 5px; }
     </style>
 </head>
 <body>
@@ -64,25 +127,27 @@
     <div class="kpi-item">CSAT <span id="kpi-csat" class="kpi-value">100%</span></div>
 </div>
 
-<header><strong>SwiftSim Elite 🚀 - Mobile Edition</strong></header>
-
-<div class="scenario-picker">
-    <select id="scenarioSelect">
-        <optgroup label="Simulations">
-            <option value="fr_1">Cas 1: Neige A7 (Sarah)</option>
-            <option value="fr_9">Cas 9: Client Agressif (Jean-Luc)</option>
-            <option value="fr_10">Cas 10: Camion Accidenté</option>
-        </optgroup>
-    </select>
-    <button class="btn-launch" onclick="initApp()">LANCER</button>
-</div>
+<header>
+    <div style="font-size: 0.9em;"><strong>SwiftSim Elite 🚀 Mobile</strong></div>
+    <div style="display:flex; gap:5px; width: 100%;">
+        <select id="scenarioSelect" onchange="initApp()">
+            <option value="fr_1">Cas 1: Neige A7</option>
+            <option value="fr_2">Cas 2: Adresse Incomplète</option>
+            <option value="fr_3">Cas 3: Relais Fermé</option>
+            <option value="fr_4">Cas 4: Colis Endommagé</option>
+            <option value="fr_9">Cas 9: Client Agressif</option>
+            <option value="fr_10">Cas 10: Accident</option>
+        </select>
+        <button onclick="initApp()" style="white-space:nowrap; padding: 0 10px;">RESET</button>
+    </div>
+</header>
 
 <main>
     <div id="tab-chat" class="tab-content active">
         <div class="panel">
             <div id="chat-window"></div>
             <div class="input-area">
-                <textarea id="agentInput" placeholder="Réponse..."></textarea>
+                <textarea id="agentInput" placeholder="Votre réponse..."></textarea>
                 <button class="btn-send" onclick="sendMessage()">ENVOYER</button>
             </div>
         </div>
@@ -90,60 +155,58 @@
 
     <div id="tab-bo" class="tab-content">
         <div class="panel">
-            <div class="panel-header">Système Back-Office</div>
-            <div style="padding:10px;">
-                <input type="text" id="searchBO" placeholder="Saisir n° colis..." onkeyup="handleSearch()" style="width:100%; padding:12px; box-sizing:border-box; border:1px solid #ccc; border-radius:5px; font-size:16px;">
-                <div id="boResults"></div>
+            <div style="padding:15px;">
+                <input type="text" id="searchBO" placeholder="Rechercher nom/colis..." onkeyup="handleSearch()" style="width:100%; padding:12px; font-size:16px; border-radius:5px; border:1px solid #ccc;">
+                <div id="boResults" style="margin-top:15px;"></div>
             </div>
         </div>
     </div>
 
-    <div id="tab-process" class="tab-content">
-        <div class="panel">
-            <div class="panel-header">Méthodologie</div>
-            <div id="stepList" style="padding:10px; overflow-y:auto;"></div>
-            <div id="hintContainer" style="padding:10px;"></div>
-        </div>
+    <div id="tab-steps" class="tab-content">
+        <div id="stepList"></div>
+        <div id="hintContainer"></div>
     </div>
 </main>
 
-<nav class="mobile-tabs">
-    <button class="tab-btn active" onclick="switchTab('tab-chat', this)">💬 CHAT</button>
-    <button class="tab-btn" onclick="switchTab('tab-bo', this)">🖥️ BO</button>
-    <button class="tab-btn" onclick="switchTab('tab-process', this)">📋 ÉTAPES</button>
+<nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab(event, 'tab-chat')">💬 Chat</button>
+    <button class="tab-btn" onclick="switchTab(event, 'tab-bo')">🖥️ BO</button>
+    <button class="tab-btn" onclick="switchTab(event, 'tab-steps')">📋 Étapes</button>
 </nav>
 
 <script>
-// --- LOGIQUE MOBILE (Navigation) ---
-function switchTab(tabId, btn) {
-    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById(tabId).classList.add('active');
-    btn.classList.add('active');
+// --- LOGIQUE DE NAVIGATION MOBILE ---
+function switchTab(evt, tabName) {
+    let contents = document.getElementsByClassName("tab-content");
+    for (let i = 0; i < contents.length; i++) contents[i].classList.remove("active");
+    let btns = document.getElementsByClassName("tab-btn");
+    for (let i = 0; i < btns.length; i++) btns[i].classList.remove("active");
+    document.getElementById(tabName).classList.add("active");
+    evt.currentTarget.classList.add("active");
 }
 
-// --- LOGIQUE SWIFTSIM (Identique à votre original PC) ---
+// --- LOGIQUE SWIFTSIM (Reprise Intégrale de votre code) ---
 const db = [
     { id: "SLX-44102", client: "Sarah El Mansouri", status: "Retenu", info: "Bloqué Hub Lyon. Raison : Fortes neiges A7. Reprise estimée sous 24h." },
     { id: "SLX-10022", client: "Marc Lefebvre", status: "Bloqué", info: "Adresse : 15 rue des Fleurs. Note : Code porte manquant." },
-    { id: "SLX-88291", client: "Julie Morel", status: "Retour", info: "Point Relais fermé. Doit être redirigé vers 'Relais Bleu'." },
+    { id: "SLX-88291", client: "Julie Morel", status: "Retour", info: "Point Relais fermé. Redirigé vers 'Relais Bleu'." },
     { id: "SLX-99999", client: "Jean-Luc", status: "Inconnu", info: "Aucune donnée de tracking." },
-    { id: "SLX-66554", client: "Logistique", status: "Détruit", info: "Accident transporteur. Remboursement auto." }
+    { id: "SLX-66554", client: "Logistique", status: "Détruit", info: "Accident transporteur." }
 ];
 
-const pokes = ["Vous êtes là ?", "J'attends...", "???", "Répondez-moi svp."];
+const pokes = ["Vous êtes là ?", "J'attends...", "???", "Répondez moi svp."];
 
 const scenarios = {
     fr_1: { client: "Sarah E.", intro: "Bonjour ! Mon colis SLX-44102 est bloqué ! C'est urgent !", steps: [
-        { label: "1. Accueil & Empathie", keys: ["bonjour", "comprends", "navré", "aider"], hints: ["Saluez et exprimez votre regret."], reply: "C'est bien gentil, mais ça n'explique pas le retard..." },
-        { label: "2. Mise en attente", keys: ["patienter", "vérifie", "attente"], hints: ["Dites que vous allez chercher l'info au BO."], reply: "D'accord, je vous laisse regarder." },
-        { label: "3. Diagnostic BO (Neige)", keys: ["neige", "météo", "lyon"], hints: ["Mentionnez la neige à Lyon (vu dans le BO)."], reply: "Et ça va durer longtemps ?" },
-        { label: "4. Solution (24h)", keys: ["24h", "demain", "repartir"], hints: ["Annoncez une reprise sous 24h."], reply: "Bon, pas le choix alors." },
-        { label: "5. Prise de congé", keys: ["disponible", "journée", "revoir"], hints: ["Formule de politesse finale."], reply: "Au revoir." }
+        { label: "1. Accueil & Empathie", keys: ["bonjour", "comprends", "navré", "aider"], hints: ["Saluez et montrez votre empathie."], reply: "C'est bien gentil, mais ça n'explique pas le retard..." },
+        { label: "2. Mise en attente", keys: ["patienter", "vérifie", "attente"], hints: ["Demandez à vérifier le BO."], reply: "D'accord, je vous laisse regarder." },
+        { label: "3. Diagnostic (Neige)", keys: ["neige", "météo", "lyon"], hints: ["Le colis est à Lyon, bloqué par la neige."], reply: "Et ça va durer longtemps ?" },
+        { label: "4. Solution (24h)", keys: ["24h", "demain"], hints: ["Reprise sous 24h."], reply: "Bon, pas le choix alors." },
+        { label: "5. Prise de congé", keys: ["disponible", "journée", "revoir"], hints: ["Formule de politesse standard."], reply: "Au revoir." }
     ]},
     fr_9: { client: "Jean-Luc", intro: "C'EST SCANDALEUX ! MON COLIS SLX-99999 ?", steps: [
-        { label: "1. Désamorçage", keys: ["monsieur", "navré", "calme"], hints: ["Restez formel."], reply: "Où est mon colis ?" },
-        { label: "2. Analyse BO", keys: ["vérifie", "tracking", "incident"], hints: ["Expliquez le manque de visibilité."], reply: "C'est tout ?" }
+        { label: "1. Désamorçage", keys: ["monsieur", "navré", "calme"], hints: ["Restez formel."], reply: "Je veux savoir où il est !" },
+        { label: "2. Transparence", keys: ["vérifie", "incident", "visibilité"], hints: ["Expliquez le souci de tracking."], reply: "C'est pas possible !" }
     ]}
 };
 
@@ -158,7 +221,6 @@ function initApp() {
     document.getElementById('hintContainer').innerHTML = "";
     addMsg(activeSc.client, activeSc.intro, 'client');
     updateSteps(); startTimers(); updateKPIs();
-    switchTab('tab-chat', document.querySelector('.tab-btn')); // Retour au chat au lancement
 }
 
 function startTimers() {
@@ -207,14 +269,12 @@ function sendMessage() {
             addMsg(activeSc.client, step.reply, "client");
             if(currentStep === activeSc.steps.length) {
                 clearInterval(timerInterval); clearInterval(slaInterval);
-                addMsg("SYSTEM", "🏆 RÉUSSI ! CSAT : " + csat + "%", "system");
+                addMsg("SYSTEM", "🏆 MISSION RÉUSSIE !", "system");
             } else { updateSteps(); resetSLA(); }
         }, 800);
     } else {
         errorCount++; csat -= 2; updateKPIs();
-        document.getElementById('hintContainer').innerHTML = `<div class="hint-box">💡 <strong>MÉTHODOLOGIE :</strong><br>${step.hints[0]}</div>`;
-        // Switch vers l'onglet processus pour montrer l'aide si erreur répétée
-        if(errorCount > 1) switchTab('tab-process', document.querySelectorAll('.tab-btn')[2]);
+        document.getElementById('hintContainer').innerHTML = `<div class="hint-box">💡 INDICE : ${step.hints[0]}</div>`;
     }
 }
 
@@ -232,10 +292,8 @@ function handleSearch() {
     res.innerHTML = "";
     if(val.length < 2) return;
     db.filter(item => item.client.toLowerCase().includes(val) || item.id.toLowerCase().includes(val))
-      .forEach(item => { res.innerHTML += `<div style="border:1px solid #eee; padding:10px; margin-top:5px; border-left:4px solid var(--accent); font-size:0.85em; background:#fff;">
-        <span style="color:var(--accent); font-weight:bold;">${item.id}</span> - ${item.client}<br>
-        <b>Statut :</b> ${item.status}<br>
-        <i style="color:#666;">Note BO : ${item.info}</i></div>`; });
+      .forEach(item => { res.innerHTML += `<div style="border:1px solid #ddd; padding:10px; margin-top:5px; border-left:4px solid var(--accent); background:white; font-size:0.85em;">
+        <strong>${item.id}</strong><br>Statut: ${item.status}<br><small>${item.info}</small></div>`; });
 }
 window.onload = initApp;
 </script>
