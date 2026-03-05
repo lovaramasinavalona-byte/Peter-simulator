@@ -9,114 +9,111 @@
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f8fafc; }
         .glass-panel { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(12px); border: 1px solid rgba(226, 232, 240, 0.8); }
-        .kpi-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .kpi-card:hover { transform: translateY(-2px); }
         .step-active { border-left: 4px solid #3b82f6; background: #eff6ff; animation: pulse-border 2s infinite; }
-        @keyframes pulse-border { 0% { border-left-color: #3b82f6; } 50% { border-left-color: #93c5fd; } 100% { border-left-color: #3b82f6; } }
-        .bubble { position: relative; max-width: 80%; padding: 12px 16px; border-radius: 18px; font-size: 0.9rem; line-height: 1.5; }
+        @keyframes pulse-border { 0%, 100% { border-left-color: #3b82f6; } 50% { border-left-color: #93c5fd; } }
+        .bubble { position: relative; max-width: 85%; padding: 12px 16px; border-radius: 18px; font-size: 0.9rem; margin-bottom: 12px; line-height: 1.4; }
         .bubble-client { background: #f1f5f9; color: #1e293b; align-self: flex-start; border-bottom-left-radius: 2px; }
-        .bubble-agent { background: #2563eb; color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
-        .critical-alert { background: #fef2f2; border: 1px solid #fee2e2; color: #dc2626; animation: shake 0.5s ease-in-out; }
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+        .bubble-agent { background: #2563eb; color: white; align-self: flex-end; border-bottom-right-radius: 2px; shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2); }
+        .bubble-system { background: #fefce8; color: #854d0e; align-self: center; font-size: 0.75rem; border: 1px solid #fef08a; text-align: center; width: 90%; }
         #call-log::-webkit-scrollbar { width: 5px; }
         #call-log::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .on-hold { animation: blink-red 1.5s infinite; background: #fff1f2 !important; color: #be123c !important; }
+        @keyframes blink-red { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
     </style>
 </head>
 <body class="h-screen flex flex-col overflow-hidden">
 
     <nav class="h-16 bg-slate-900 flex items-center justify-between px-8 shadow-2xl z-50">
         <div class="flex items-center gap-3">
-            <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center font-extrabold text-white">LK</div>
-            <h1 class="text-white font-bold tracking-tight text-lg">LK's FORMATION <span class="text-blue-400 text-xs ml-2 font-normal">v6.0 PRO</span></h1>
+            <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center font-extrabold text-white shadow-lg">LK</div>
+            <h1 class="text-white font-bold tracking-tight text-lg">LK's FORMATION <span class="text-blue-400 text-xs ml-2 font-normal">v6.5 ELITE</span></h1>
         </div>
         <div class="flex gap-8">
-            <div class="text-center"><p class="text-[10px] text-slate-400 font-bold uppercase">DMT Actuelle</p><span id="timer" class="text-blue-400 font-mono text-xl">00:00</span></div>
+            <div class="text-center"><p class="text-[10px] text-slate-400 font-bold uppercase">DMT</p><span id="timer" class="text-blue-400 font-mono text-xl">00:00</span></div>
             <div class="text-center border-x border-slate-700 px-8"><p class="text-[10px] text-slate-400 font-bold uppercase">Qualité Score</p><span id="score-val" class="text-emerald-400 font-mono text-xl">100%</span></div>
-            <div class="text-center"><p class="text-[10px] text-slate-400 font-bold uppercase">Avertissements</p><span id="err-val" class="text-rose-500 font-mono text-xl">0</span></div>
+            <div class="text-center"><p class="text-[10px] text-slate-400 font-bold uppercase">Alertes QA</p><span id="err-val" class="text-rose-500 font-mono text-xl">0</span></div>
         </div>
     </nav>
 
     <main class="flex-grow grid grid-cols-12 gap-4 p-4 overflow-hidden">
-        
         <div class="col-span-3 flex flex-col gap-4 overflow-hidden">
             <section class="glass-panel rounded-2xl p-4 flex flex-col shadow-sm">
-                <label class="text-[10px] font-bold text-slate-500 uppercase mb-2">Sélecteur de Module de Formation</label>
-                <select id="scSelect" onchange="Manager.loadScenario()" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-3 text-sm font-semibold focus:ring-2 focus:ring-blue-500 outline-none transition-all"></select>
-                
-                <div class="mt-6 flex-grow overflow-y-auto">
-                    <div class="flex items-center gap-2 mb-3"><span class="w-2 h-2 bg-amber-400 rounded-full"></span><h3 class="text-xs font-bold text-slate-700 uppercase">Fiche Client CRM</h3></div>
-                    <div id="crm-content" class="text-sm text-slate-600 leading-relaxed bg-amber-50/50 p-4 rounded-xl border border-amber-100"></div>
+                <label class="text-[10px] font-bold text-slate-500 uppercase mb-2">Sélecteur de Cas Réel</label>
+                <select id="scSelect" onchange="Manager.loadScenario()" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-3 text-sm font-semibold outline-none focus:ring-2 focus:ring-blue-500 transition-all"></select>
+                <div class="mt-4 flex-grow overflow-y-auto">
+                    <h3 class="text-[10px] font-bold text-slate-400 uppercase mb-2 border-b pb-1">Fiche Client CRM</h3>
+                    <div id="crm-content" class="text-xs text-slate-600 bg-white p-3 rounded-xl border border-slate-100 shadow-inner leading-relaxed"></div>
                 </div>
             </section>
-
             <section class="glass-panel rounded-2xl p-4 flex-grow shadow-sm flex flex-col">
-                <div class="flex items-center gap-2 mb-3"><span class="w-2 h-2 bg-blue-500 rounded-full"></span><h3 class="text-xs font-bold text-slate-700 uppercase">Données Back-Office</h3></div>
-                <div id="bo-content" class="flex-grow"></div>
+                <h3 class="text-[10px] font-bold text-slate-400 uppercase mb-2 border-b pb-1">Système Back-Office (BO)</h3>
+                <div id="bo-content" class="flex-grow overflow-y-auto"></div>
             </section>
         </div>
 
         <div class="col-span-6 flex flex-col gap-4 overflow-hidden">
-            <div id="mentor-box" class="glass-panel rounded-2xl p-4 min-h-[80px] flex items-center gap-4 transition-all">
-                <div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-xl">🎓</div>
+            <div id="mentor-box" class="glass-panel rounded-2xl p-3 flex items-center gap-4 border-l-4 border-l-blue-500 shadow-sm">
+                <div class="text-xl">🎓</div>
                 <div>
-                    <p class="text-[10px] font-bold text-blue-600 uppercase">Coach en direct</p>
-                    <p id="hint-text" class="text-sm text-slate-700 font-medium italic">Prêt pour votre session ? Sélectionnez un cas et lancez l'appel.</p>
+                    <p class="text-[9px] font-bold text-blue-600 uppercase tracking-widest">Aide Superviseur</p>
+                    <p id="hint-text" class="text-xs text-slate-700 font-medium italic">Sélectionnez un module pour commencer.</p>
                 </div>
             </div>
-
-            <div class="glass-panel rounded-2xl flex-grow flex flex-col shadow-inner overflow-hidden">
-                <div id="call-log" class="flex-grow p-6 overflow-y-auto flex flex-col gap-4"></div>
-                <div class="p-4 bg-white/50 border-t flex items-center justify-between gap-4">
-                    <div class="flex-grow flex items-center gap-3 text-slate-400 italic text-sm">
-                        <span id="voice-indicator" class="w-3 h-3 rounded-full bg-slate-300"></span>
-                        <span id="transcription-preview">En attente d'activation du micro...</span>
+            <div class="glass-panel rounded-2xl flex-grow flex flex-col shadow-inner overflow-hidden bg-slate-50/50">
+                <div id="call-log" class="flex-grow p-6 overflow-y-auto flex flex-col"></div>
+                <div class="p-4 bg-white border-t flex flex-col gap-3">
+                    <div id="transcription-preview" class="text-slate-400 italic text-[11px] text-center px-4">Prêt à écouter votre voix...</div>
+                    <div class="flex items-center justify-between gap-4">
+                        <button id="holdBtn" onclick="Core.toggleHold()" class="px-6 py-4 bg-amber-500 text-white font-bold rounded-xl shadow-md hover:bg-amber-600 transition-all active:scale-95 disabled:opacity-30" disabled>
+                            ⏸ MISE EN ATTENTE
+                        </button>
+                        <button id="mainBtn" onclick="Core.toggleCall()" class="flex-grow py-4 bg-emerald-500 text-white font-extrabold rounded-xl shadow-lg hover:bg-emerald-600 transition-all active:scale-95">
+                            DÉMARRER LA SESSION
+                        </button>
                     </div>
-                    <button id="mainBtn" onclick="Core.toggleCall()" class="px-8 py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold rounded-xl shadow-lg shadow-emerald-200 transition-all active:scale-95 flex items-center gap-2">
-                        <span id="btn-icon">📞</span> <span id="btn-text">DÉMARRER LA SESSION</span>
-                    </button>
                 </div>
             </div>
         </div>
 
-        <div class="col-span-3 flex flex-col overflow-hidden">
+        <div class="col-span-3">
             <section class="glass-panel rounded-2xl p-4 h-full shadow-sm flex flex-col">
-                <div class="flex items-center gap-2 mb-4"><span class="w-2 h-2 bg-emerald-500 rounded-full"></span><h3 class="text-xs font-bold text-slate-700 uppercase">Workflow de Résolution</h3></div>
-                <div id="script-steps" class="flex-grow space-y-2 overflow-y-auto pr-2"></div>
-                <div class="mt-4 p-4 bg-slate-900 rounded-xl">
-                    <p class="text-[10px] text-slate-500 font-bold uppercase mb-1">Objectif Pédagogique</p>
-                    <p id="module-goal" class="text-xs text-slate-300">Maîtrise de la structure d'appel et de l'empathie client.</p>
-                </div>
+                <h3 class="text-[10px] font-bold text-slate-400 uppercase mb-4 border-b pb-1">Grille d'Évaluation (Workflow)</h3>
+                <div id="script-steps" class="flex-grow space-y-2 overflow-y-auto"></div>
             </section>
         </div>
     </main>
 
     <script>
-        /* LK's FORMATION - CORE SYSTEM
-           Respect de la règle d'or : Protection par variable locale et obfuscation de logique 
-        */
         const Manager = {
             scenarios: [],
+            lexique: {
+                accueil: ["bonjour", "bienvenue", "enchanté", "lk", "aider", "service", "écoute", "allo"],
+                empathie: ["comprends", "navré", "désolé", "excuse", "regrette", "rassurez", "entends", "parfaitement"],
+                attente: ["attente", "instant", "recherche", "patienter", "vérifie", "consulte"],
+                solution: ["trouvé", "solution", "parce que", "expliquer", "voici", "résolu", "fait", "activation"],
+                cloture: ["autre", "besoin", "aidé", "revoir", "journée", "merci", "disposition", "confiance"]
+            },
             generate() {
-                const categories = [
-                    {t: "Support FAI", b: "Vérifier la ligne ADSL", c: "Mécontent - Coupure"},
-                    {t: "E-Commerce", b: "Statut de livraison Colis", c: "Urgent - Anniversaire"},
-                    {t: "Assurance", b: "Sinistre Automobile", c: "Stressé - Accident"},
-                    {t: "Soutien Médical", b: "Prise de RDV IRM", c: "Patient inquiet"}
+                const cases = [
+                    { t: "FIBRE : Panne Totale", r: "Je n'ai plus d'internet depuis ce matin !", c: "M. Rakoto - Client Premium (8 ans d'ancienneté)", bo: "Contrat: FBR-99 | Statut: Signal Perdu (LOS rouge) | Dernier incident: 12/2025 | Action: Programmer technicien." },
+                    { t: "MOBILE : Hors-Forfait", r: "Pourquoi ma facture est de 200€ ce mois-ci ?", c: "Mme Andria - Forfait 50Go", bo: "Consommation: 12GB roaming (Malaisie) | Date: 15/02 | Plafond dépassé | Action: Proposer option voyage." },
+                    { t: "LOGISTIQUE : Colis Perdu", r: "Mon colis devait arriver hier pour l'anniversaire de ma fille !", c: "M. Silva - Commande Express", bo: "Suivi: Bloqué Hub Antsirabe | Cause: Intempéries | Livraison estimée: J+2 | Action: Offrir bon d'achat." },
+                    { t: "ADMIN : Résiliation", r: "Je veux tout résilier, c'est trop cher !", c: "M. Dupont - Client Standard", bo: "Engagé jusqu'au: 01/2027 | Frais de rupture: 150€ | Motif: Concurrence | Action: Appliquer remise 15%." }
                 ];
-                for(let i=1; i<=40; i++){
-                    const cat = categories[i % 4];
+                for(let i=1; i<=40; i++) {
+                    const base = cases[i % 4];
                     this.scenarios.push({
-                        id: i,
-                        title: `MODULE ${i} : ${cat.t}`,
-                        type: i % 2 === 0 ? "IN" : "OUT",
-                        crm: `<b>CLIENT :</b> M. ${['Rakoto','Andria','Razafy','Silva'][i%4]}<br><b>CONTEXTE :</b> ${cat.c}<br><b>HISTORIQUE :</b> Contact régulier.`,
-                        bo: { ref: `LK-${1000+i}`, info: cat.b, detail: "Priorité Haute" },
+                        id: i, title: `CAS ${i} : ${base.t}`,
+                        crm: `${base.c}<br><b>Dernier contact :</b> Il y a 14 jours.<br><b>Humeur :</b> ${i % 2 === 0 ? 'Irrité' : 'Calme'}.`,
+                        bo: `<div class="p-3 bg-slate-900 text-emerald-400 font-mono text-[10px] rounded-lg border-2 border-slate-700 leading-tight">
+                                > ACCÈS SYSTÈME...<br>> ${base.bo}<br>> LOGS: Tentatives échouées le ${i}/02.
+                             </div>`,
                         steps: [
-                            { l: "Ouverture Pro", k: ["bonjour","enchanté","peter","lk"], h: "Utilisez une formule d'accueil chaleureuse.", r: "Oui bonjour... je vous appelle car j'ai un gros souci." },
-                            { l: "Empathie Active", k: ["comprends","navré","désolé"], h: "Validez l'émotion du client.", r: "C'est gentil, mais mon dossier " + (1000+i) + " n'avance pas." },
-                            { l: "Action Métier", k: ["vérifie","dossier","instant","attente"], h: "Proposez une action concrète.", r: "D'accord, je vous laisse regarder." },
-                            { l: "Résolution", k: ["trouvé","parce que","solution"], h: "Donnez une explication claire via le BO.", r: "Ah enfin une réponse claire !" },
-                            { l: "Pre-Closing", k: ["autre","besoin","aidé"], h: "Vérifiez si le client a d'autres besoins.", r: "Non c'est tout, merci beaucoup." }
+                            { l: "Accroche & Identification", k: this.lexique.accueil, h: "Saluez et identifiez le client par son nom.", r: base.r },
+                            { l: "Empathie & Reformulation", k: this.lexique.empathie, h: "Montrez que vous comprenez l'impact pour lui.", r: "Exactement, c'est inadmissible !" },
+                            { l: "Mise en attente (Recherche BO)", k: this.lexique.attente, h: "Utilisez le bouton Pause ou dites que vous vérifiez.", r: "Dépêchez-vous s'il vous plaît." },
+                            { l: "Annonce de la Solution", k: this.lexique.solution, h: "Donnez les infos précises trouvées dans le BO.", r: "Enfin une explication claire, merci." },
+                            { l: "Closing & Vente Additionnelle", k: this.lexique.cloture, h: "Prenez congé en restant pro.", r: "C'est parfait, au revoir !" }
                         ]
                     });
                 }
@@ -124,175 +121,138 @@
             loadScenario() {
                 const s = this.scenarios.find(x => x.id == document.getElementById('scSelect').value);
                 document.getElementById('crm-content').innerHTML = s.crm;
-                document.getElementById('module-goal').innerText = `Maîtrise du flux : ${s.title}`;
-                document.getElementById('bo-content').innerHTML = `
-                    <div class="bg-slate-100 p-4 rounded-xl text-xs space-y-2 border border-slate-200">
-                        <div class="flex justify-between"><b>REF:</b> <span>${s.bo.ref}</span></div>
-                        <div class="flex justify-between"><b>ACTION:</b> <span>${s.bo.info}</span></div>
-                        <div class="flex justify-between font-bold text-blue-600"><span>${s.bo.detail}</span></div>
-                    </div>`;
+                document.getElementById('bo-content').innerHTML = s.bo;
                 Core.reset();
             }
         };
 
         const Core = {
-            state: { step: 0, err: 0, score: 100, active: false, timer: 0, timerInt: null, checks: {} },
+            state: { step: 0, score: 100, err: 0, active: false, timer: 0, lastTalk: 0, onHold: false },
             rec: null,
             synth: window.speechSynthesis,
-
+            
             init() {
                 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-                if(!SR) return alert("Navigateur non compatible");
+                if(!SR) return alert("Micro non supporté.");
                 this.rec = new SR();
                 this.rec.lang = 'fr-FR'; this.rec.continuous = true; this.rec.interimResults = true;
                 this.rec.onresult = (e) => {
+                    if(this.state.onHold) return;
+                    let t = "";
                     for (let i = e.resultIndex; i < e.results.length; ++i) {
-                        if (e.results[i].isFinal) this.validate(e.results[i][0].transcript);
-                        else document.getElementById('transcription-preview').innerText = e.results[i][0].transcript;
+                        t = e.results[i][0].transcript;
+                        if (e.results[i].isFinal) this.validate(t);
+                        else document.getElementById('transcription-preview').innerText = t;
                     }
                 };
             },
 
-            toggleCall() {
-                if(!this.state.active) this.start();
-                else this.stop();
+            toggleHold() {
+                if(!this.state.active) return;
+                this.state.onHold = !this.state.onHold;
+                const hb = document.getElementById('holdBtn');
+                if(this.state.onHold) {
+                    hb.innerText = "▶ REPRENDRE L'APPEL";
+                    hb.classList.add('on-hold');
+                    this.addMsg('system', "--- APPEL EN ATTENTE (Musique...) ---");
+                } else {
+                    hb.innerText = "⏸ MISE EN ATTENTE";
+                    hb.classList.remove('on-hold');
+                    this.addMsg('system', "--- REPRISE DE L'APPEL ---");
+                    this.state.lastTalk = 0;
+                }
             },
 
             start() {
+                if(!this.rec) this.init();
                 this.state.active = true;
-                document.getElementById('btn-text').innerText = "RACCROCHER (TERMINER)";
-                document.getElementById('mainBtn').className = "px-8 py-4 bg-rose-500 text-white font-extrabold rounded-xl shadow-lg transition-all active:scale-95 flex items-center gap-2";
-                document.getElementById('voice-indicator').classList.replace('bg-slate-300', 'bg-emerald-500');
-                document.getElementById('voice-indicator').classList.add('animate-ping');
-                
+                this.state.lastTalk = 0;
+                document.getElementById('mainBtn').innerText = "RACCROCHER";
+                document.getElementById('mainBtn').className = "flex-grow py-4 bg-rose-600 text-white font-extrabold rounded-xl shadow-lg transition-all";
+                document.getElementById('holdBtn').disabled = false;
                 this.rec.start();
-                this.state.timerInt = setInterval(() => {
+                this.timerInt = setInterval(() => {
                     this.state.timer++;
-                    document.getElementById('timer').innerText = this.formatTime(this.state.timer);
+                    if(!this.state.onHold) this.state.lastTalk++;
+                    this.updateUI();
+                    if(this.state.lastTalk > 15) this.clientRelance();
                 }, 1000);
+                this.updateWorkflow();
+            },
 
-                const s = Manager.scenarios.find(x => x.id == document.getElementById('scSelect').value);
-                this.updateWorkflow(s);
-                if(s.type === "IN") {
-                    setTimeout(() => this.speak(s.steps[0].r, s.title.split(':')[0]), 1000);
-                }
+            clientRelance() {
+                const r = ["Allô ? On a été coupé ?", "Vous êtes toujours là ? Ça fait long là...", "Monsieur ? Je n'ai pas toute la journée !"];
+                const msg = r[Math.floor(Math.random()*r.length)];
+                this.addMsg('client', msg);
+                this.speak(msg);
+                this.state.lastTalk = 0;
+                this.state.score = Math.max(0, this.state.score - 5);
             },
 
             validate(text) {
+                this.state.lastTalk = 0;
                 this.addMsg('agent', text);
                 const s = Manager.scenarios.find(x => x.id == document.getElementById('scSelect').value);
                 const step = s.steps[this.state.step];
-                const cleanText = text.toLowerCase();
+                const clean = text.toLowerCase();
                 
-                let found = false;
-                step.k.forEach(key => {
-                    if(!this.state.checks[key] && cleanText.includes(key)) {
-                        this.state.checks[key] = true;
-                        found = true;
-                    }
-                });
+                const found = step.k.some(key => clean.includes(key));
 
                 if(found) {
-                    this.updateHint("Excellent. Continuez ainsi.");
-                    if(step.k.every(k => this.state.checks[k])) this.nextStep(s);
+                    this.state.step++;
+                    if(this.state.step < s.steps.length) {
+                        this.updateWorkflow();
+                        setTimeout(() => {
+                            this.addMsg('client', step.r);
+                            this.speak(step.r);
+                        }, 800);
+                    } else {
+                        this.stop("FÉLICITATIONS : Objectifs atteints. Client satisfait.");
+                    }
                 } else {
                     this.state.err++;
                     this.state.score = Math.max(0, this.state.score - 2);
-                    this.updateKPIs();
-                    this.provideHint(step);
+                    document.getElementById('hint-text').innerHTML = `<b class="text-rose-500">Alerte QA :</b> ${step.h}`;
                 }
             },
 
-            nextStep(s) {
-                const prevStep = s.steps[this.state.step];
-                this.state.step++;
-                this.state.checks = {};
-                if(this.state.step < s.steps.length) {
-                    this.updateWorkflow(s);
-                    setTimeout(() => {
-                        this.addMsg('client', prevStep.r);
-                        this.speak(prevStep.r);
-                    }, 800);
-                } else {
-                    this.stop("FÉLICITATIONS ! Session réussie.");
-                }
-            },
-
-            provideHint(step) {
-                const box = document.getElementById('mentor-box');
-                const txt = document.getElementById('hint-text');
-                if(this.state.err > 8) {
-                    box.classList.add('critical-alert');
-                    txt.innerHTML = `<span class="font-bold uppercase text-xs">Aide Critique :</span> Pensez à utiliser : <b>${step.k[0]}</b>`;
-                } else {
-                    txt.innerText = step.h;
-                }
-            },
-
-            updateWorkflow(s) {
-                document.getElementById('script-steps').innerHTML = s.steps.map((step, i) => `
-                    <div class="p-3 rounded-xl border text-xs transition-all ${i === this.state.step ? 'step-active shadow-sm' : (i < this.state.step ? 'bg-emerald-50 text-emerald-700 border-emerald-100 opacity-60' : 'bg-white opacity-40')}">
-                        <div class="flex justify-between items-center">
-                            <b>${step.l}</b>
-                            ${i < this.state.step ? '<span>✅</span>' : ''}
-                        </div>
-                    </div>
-                `).join('');
-            },
-
-            stop(msg) {
+            stop(m) {
                 this.state.active = false;
-                clearInterval(this.state.timerInt);
+                this.state.onHold = false;
+                clearInterval(this.timerInt);
                 this.rec.stop();
-                if(msg) {
-                    this.addMsg('system', msg);
-                    this.speak(msg);
-                }
-                document.getElementById('btn-text').innerText = "DÉMARRER LA SESSION";
-                document.getElementById('mainBtn').className = "px-8 py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold rounded-xl shadow-lg transition-all active:scale-95 flex items-center gap-2";
-                document.getElementById('voice-indicator').classList.remove('animate-ping');
+                if(m) { this.addMsg('system', m); this.speak(m); }
+                document.getElementById('mainBtn').innerText = "DÉMARRER LA SESSION";
+                document.getElementById('mainBtn').className = "flex-grow py-4 bg-emerald-500 text-white font-extrabold rounded-xl shadow-lg transition-all";
+                document.getElementById('holdBtn').disabled = true;
+                document.getElementById('holdBtn').classList.remove('on-hold');
+                document.getElementById('holdBtn').innerText = "⏸ MISE EN ATTENTE";
             },
 
-            reset() {
-                this.state = { step: 0, err: 0, score: 100, active: false, timer: 0, timerInt: null, checks: {} };
-                document.getElementById('call-log').innerHTML = "";
-                this.updateKPIs();
-            },
-
-            addMsg(type, t) {
-                const log = document.getElementById('call-log');
-                const label = type === 'agent' ? 'Vous' : (type === 'system' ? 'Système' : 'Client');
-                log.innerHTML += `<div class="bubble bubble-${type} msg-anim shadow-sm">
-                    <p class="text-[9px] font-extrabold uppercase opacity-50 mb-1">${label}</p>${t}</div>`;
-                log.scrollTop = log.scrollHeight;
-            },
-
-            speak(t) {
-                const u = new SpeechSynthesisUtterance(t);
-                u.lang = 'fr-FR'; u.rate = 0.9;
-                this.synth.speak(u);
-            },
-
-            updateKPIs() {
-                document.getElementById('timer').innerText = this.formatTime(this.state.timer);
+            toggleCall() { this.state.active ? this.stop() : this.start(); },
+            reset() { this.state = { step: 0, score: 100, err: 0, active: false, timer: 0, lastTalk: 0, onHold: false }; document.getElementById('call-log').innerHTML = ""; this.updateUI(); this.updateWorkflow(); },
+            addMsg(type, t) { const l = document.getElementById('call-log'); l.innerHTML += `<div class="bubble bubble-${type}">${t}</div>`; l.scrollTop = l.scrollHeight; },
+            speak(t) { if(this.state.onHold) return; const u = new SpeechSynthesisUtterance(t); u.lang = 'fr-FR'; this.synth.speak(u); },
+            updateUI() {
+                document.getElementById('timer').innerText = Math.floor(this.state.timer/60).toString().padStart(2,'0') + ":" + (this.state.timer%60).toString().padStart(2,'0');
                 document.getElementById('score-val').innerText = this.state.score + "%";
                 document.getElementById('err-val').innerText = this.state.err;
             },
-
-            updateHint(m) { document.getElementById('hint-text').innerText = m; document.getElementById('mentor-box').classList.remove('critical-alert'); },
-            formatTime(s) { return Math.floor(s/60).toString().padStart(2,'0') + ":" + (s%60).toString().padStart(2,'0'); }
+            updateWorkflow() {
+                const s = Manager.scenarios.find(x => x.id == document.getElementById('scSelect').value);
+                document.getElementById('script-steps').innerHTML = s.steps.map((st, i) => `
+                    <div class="p-3 rounded-xl border text-[11px] font-semibold ${i === this.state.step ? 'step-active shadow-sm' : (i < this.state.step ? 'bg-emerald-50 opacity-50 border-emerald-200' : 'bg-white opacity-40')}">
+                        <div class="flex justify-between"><span>${i+1}. ${st.l}</span> ${i < this.state.step ? '✅' : ''}</div>
+                    </div>`).join('');
+                if(s.steps[this.state.step]) document.getElementById('hint-text').innerText = s.steps[this.state.step].h;
+            }
         };
 
         window.onload = () => {
             Manager.generate();
             const sel = document.getElementById('scSelect');
-            Manager.scenarios.forEach(s => {
-                const o = document.createElement('option');
-                o.value = s.id; o.innerText = s.title;
-                sel.appendChild(o);
-            });
+            Manager.scenarios.forEach(s => { sel.innerHTML += `<option value="${s.id}">${s.title}</option>`; });
             Manager.loadScenario();
-            Core.init();
         };
     </script>
 </body>
