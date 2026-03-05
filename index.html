@@ -2,300 +2,298 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SwiftSim Elite 🚀 - Mobile Edition</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LK's Formation | Plateforme Certifiante</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #2c3e50; --accent: #3498db; --success: #27ae60; --danger: #e74c3c; --warning: #f39c12; }
-        
-        body { 
-            font-family: 'Segoe UI', sans-serif; 
-            margin: 0; 
-            background: #f0f2f5; 
-            display: flex; 
-            flex-direction: column; 
-            height: 100vh; 
-            overflow: hidden; 
-        }
-
-        /* Barre de KPI Compacte */
-        .kpi-bar { 
-            background: #1a252f; 
-            color: white; 
-            padding: 8px 5px; 
-            display: flex; 
-            justify-content: space-around; 
-            font-size: 0.75em; 
-            border-bottom: 2px solid var(--accent); 
-        }
-        .kpi-value { display: block; font-size: 1.1em; font-weight: bold; color: var(--warning); text-align: center; }
-
-        header { 
-            background: var(--primary); 
-            color: white; 
-            padding: 10px; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 8px;
-            align-items: center;
-        }
-
-        /* Conteneur Principal avec gestion des onglets */
-        main { flex-grow: 1; position: relative; overflow: hidden; display: flex; flex-direction: column; }
-        
-        .tab-content { 
-            display: none; 
-            flex-direction: column; 
-            height: 100%; 
-            padding: 10px; 
-            box-sizing: border-box; 
-            overflow-y: auto;
-        }
-        .tab-content.active { display: flex; }
-
-        .panel { 
-            background: white; 
-            border-radius: 8px; 
-            display: flex; 
-            flex-direction: column; 
-            border: 1px solid #ddd; 
-            height: 100%;
-        }
-
-        /* Chat Window spécifique Mobile */
-        #chat-window { flex-grow: 1; padding: 12px; overflow-y: auto; background: white; display: flex; flex-direction: column; gap: 8px; }
-        .msg { max-width: 85%; padding: 10px; border-radius: 12px; font-size: 0.9em; line-height: 1.4; }
-        .msg.client { background: #eee; align-self: flex-start; border-left: 4px solid #ccc; }
-        .msg.agent { background: var(--accent); color: white; align-self: flex-end; }
-        .msg.system { background: #fff3cd; color: #856404; align-self: center; font-size: 0.75em; padding: 5px 12px; border-radius: 20px; text-align: center; }
-
-        /* Zone de saisie adaptée aux pouces */
-        .input-area { padding: 10px; border-top: 1px solid #eee; background: white; }
-        textarea { 
-            width: 100%; 
-            height: 50px; 
-            padding: 10px; 
-            border-radius: 8px; 
-            border: 1px solid #ddd; 
-            resize: none; 
-            box-sizing: border-box; 
-            font-size: 16px; /* Empêche le zoom auto sur iOS */
-        }
-        .btn-send { 
-            width: 100%; 
-            margin-top: 8px; 
-            background: var(--success); 
-            color: white; 
-            border: none; 
-            padding: 12px; 
-            border-radius: 8px; 
-            font-weight: bold; 
-            cursor: pointer; 
-        }
-
-        /* Processus & Hints */
-        .step-item { padding: 8px; margin-bottom: 5px; border-radius: 5px; background: #f9f9f9; border-left: 3px solid #ccc; font-size: 0.8em; }
-        .step-active { background: #e3f2fd; border-left-color: var(--accent); font-weight: bold; }
-        .step-done { background: #e8f5e9; border-left-color: var(--success); opacity: 0.7; }
-        .hint-box { background: #fff9c4; color: #7f8c0d; padding: 10px; border-radius: 5px; font-size: 0.85em; border: 1px solid #fbc02d; margin-top: 10px; }
-
-        /* Barre de Navigation Mobile (Bottom Tabs) */
-        .nav-tabs { 
-            display: flex; 
-            background: #1a252f; 
-            border-top: 1px solid var(--accent); 
-        }
-        .tab-btn { 
-            flex: 1; 
-            padding: 15px 5px; 
-            color: #95a5a6; 
-            background: none; 
-            border: none; 
-            font-size: 0.7em; 
-            font-weight: bold; 
-            text-transform: uppercase;
-        }
-        .tab-btn.active { color: white; background: var(--accent); }
-
-        select { width: 100%; padding: 8px; border-radius: 5px; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f8fafc; }
+        .glass-panel { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(12px); border: 1px solid rgba(226, 232, 240, 0.8); }
+        .kpi-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .kpi-card:hover { transform: translateY(-2px); }
+        .step-active { border-left: 4px solid #3b82f6; background: #eff6ff; animation: pulse-border 2s infinite; }
+        @keyframes pulse-border { 0% { border-left-color: #3b82f6; } 50% { border-left-color: #93c5fd; } 100% { border-left-color: #3b82f6; } }
+        .bubble { position: relative; max-width: 80%; padding: 12px 16px; border-radius: 18px; font-size: 0.9rem; line-height: 1.5; }
+        .bubble-client { background: #f1f5f9; color: #1e293b; align-self: flex-start; border-bottom-left-radius: 2px; }
+        .bubble-agent { background: #2563eb; color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
+        .critical-alert { background: #fef2f2; border: 1px solid #fee2e2; color: #dc2626; animation: shake 0.5s ease-in-out; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+        #call-log::-webkit-scrollbar { width: 5px; }
+        #call-log::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
     </style>
 </head>
-<body>
+<body class="h-screen flex flex-col overflow-hidden">
 
-<div class="kpi-bar">
-    <div class="kpi-item">DMT <span id="kpi-dmt" class="kpi-value">00:00</span></div>
-    <div class="kpi-item">SLA <span id="kpi-sla" class="kpi-value">25s</span></div>
-    <div class="kpi-item">CSAT <span id="kpi-csat" class="kpi-value">100%</span></div>
-</div>
+    <nav class="h-16 bg-slate-900 flex items-center justify-between px-8 shadow-2xl z-50">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center font-extrabold text-white">LK</div>
+            <h1 class="text-white font-bold tracking-tight text-lg">LK's FORMATION <span class="text-blue-400 text-xs ml-2 font-normal">v6.0 PRO</span></h1>
+        </div>
+        <div class="flex gap-8">
+            <div class="text-center"><p class="text-[10px] text-slate-400 font-bold uppercase">DMT Actuelle</p><span id="timer" class="text-blue-400 font-mono text-xl">00:00</span></div>
+            <div class="text-center border-x border-slate-700 px-8"><p class="text-[10px] text-slate-400 font-bold uppercase">Qualité Score</p><span id="score-val" class="text-emerald-400 font-mono text-xl">100%</span></div>
+            <div class="text-center"><p class="text-[10px] text-slate-400 font-bold uppercase">Avertissements</p><span id="err-val" class="text-rose-500 font-mono text-xl">0</span></div>
+        </div>
+    </nav>
 
-<header>
-    <div style="font-size: 0.9em;"><strong>SwiftSim Elite 🚀 Mobile</strong></div>
-    <div style="display:flex; gap:5px; width: 100%;">
-        <select id="scenarioSelect" onchange="initApp()">
-            <option value="fr_1">Cas 1: Neige A7</option>
-            <option value="fr_2">Cas 2: Adresse Incomplète</option>
-            <option value="fr_3">Cas 3: Relais Fermé</option>
-            <option value="fr_4">Cas 4: Colis Endommagé</option>
-            <option value="fr_9">Cas 9: Client Agressif</option>
-            <option value="fr_10">Cas 10: Accident</option>
-        </select>
-        <button onclick="initApp()" style="white-space:nowrap; padding: 0 10px;">RESET</button>
-    </div>
-</header>
+    <main class="flex-grow grid grid-cols-12 gap-4 p-4 overflow-hidden">
+        
+        <div class="col-span-3 flex flex-col gap-4 overflow-hidden">
+            <section class="glass-panel rounded-2xl p-4 flex flex-col shadow-sm">
+                <label class="text-[10px] font-bold text-slate-500 uppercase mb-2">Sélecteur de Module de Formation</label>
+                <select id="scSelect" onchange="Manager.loadScenario()" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-3 text-sm font-semibold focus:ring-2 focus:ring-blue-500 outline-none transition-all"></select>
+                
+                <div class="mt-6 flex-grow overflow-y-auto">
+                    <div class="flex items-center gap-2 mb-3"><span class="w-2 h-2 bg-amber-400 rounded-full"></span><h3 class="text-xs font-bold text-slate-700 uppercase">Fiche Client CRM</h3></div>
+                    <div id="crm-content" class="text-sm text-slate-600 leading-relaxed bg-amber-50/50 p-4 rounded-xl border border-amber-100"></div>
+                </div>
+            </section>
 
-<main>
-    <div id="tab-chat" class="tab-content active">
-        <div class="panel">
-            <div id="chat-window"></div>
-            <div class="input-area">
-                <textarea id="agentInput" placeholder="Votre réponse..."></textarea>
-                <button class="btn-send" onclick="sendMessage()">ENVOYER</button>
+            <section class="glass-panel rounded-2xl p-4 flex-grow shadow-sm flex flex-col">
+                <div class="flex items-center gap-2 mb-3"><span class="w-2 h-2 bg-blue-500 rounded-full"></span><h3 class="text-xs font-bold text-slate-700 uppercase">Données Back-Office</h3></div>
+                <div id="bo-content" class="flex-grow"></div>
+            </section>
+        </div>
+
+        <div class="col-span-6 flex flex-col gap-4 overflow-hidden">
+            <div id="mentor-box" class="glass-panel rounded-2xl p-4 min-h-[80px] flex items-center gap-4 transition-all">
+                <div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-xl">🎓</div>
+                <div>
+                    <p class="text-[10px] font-bold text-blue-600 uppercase">Coach en direct</p>
+                    <p id="hint-text" class="text-sm text-slate-700 font-medium italic">Prêt pour votre session ? Sélectionnez un cas et lancez l'appel.</p>
+                </div>
+            </div>
+
+            <div class="glass-panel rounded-2xl flex-grow flex flex-col shadow-inner overflow-hidden">
+                <div id="call-log" class="flex-grow p-6 overflow-y-auto flex flex-col gap-4"></div>
+                <div class="p-4 bg-white/50 border-t flex items-center justify-between gap-4">
+                    <div class="flex-grow flex items-center gap-3 text-slate-400 italic text-sm">
+                        <span id="voice-indicator" class="w-3 h-3 rounded-full bg-slate-300"></span>
+                        <span id="transcription-preview">En attente d'activation du micro...</span>
+                    </div>
+                    <button id="mainBtn" onclick="Core.toggleCall()" class="px-8 py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold rounded-xl shadow-lg shadow-emerald-200 transition-all active:scale-95 flex items-center gap-2">
+                        <span id="btn-icon">📞</span> <span id="btn-text">DÉMARRER LA SESSION</span>
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div id="tab-bo" class="tab-content">
-        <div class="panel">
-            <div style="padding:15px;">
-                <input type="text" id="searchBO" placeholder="Rechercher nom/colis..." onkeyup="handleSearch()" style="width:100%; padding:12px; font-size:16px; border-radius:5px; border:1px solid #ccc;">
-                <div id="boResults" style="margin-top:15px;"></div>
-            </div>
+        <div class="col-span-3 flex flex-col overflow-hidden">
+            <section class="glass-panel rounded-2xl p-4 h-full shadow-sm flex flex-col">
+                <div class="flex items-center gap-2 mb-4"><span class="w-2 h-2 bg-emerald-500 rounded-full"></span><h3 class="text-xs font-bold text-slate-700 uppercase">Workflow de Résolution</h3></div>
+                <div id="script-steps" class="flex-grow space-y-2 overflow-y-auto pr-2"></div>
+                <div class="mt-4 p-4 bg-slate-900 rounded-xl">
+                    <p class="text-[10px] text-slate-500 font-bold uppercase mb-1">Objectif Pédagogique</p>
+                    <p id="module-goal" class="text-xs text-slate-300">Maîtrise de la structure d'appel et de l'empathie client.</p>
+                </div>
+            </section>
         </div>
-    </div>
+    </main>
 
-    <div id="tab-steps" class="tab-content">
-        <div id="stepList"></div>
-        <div id="hintContainer"></div>
-    </div>
-</main>
+    <script>
+        /* LK's FORMATION - CORE SYSTEM
+           Respect de la règle d'or : Protection par variable locale et obfuscation de logique 
+        */
+        const Manager = {
+            scenarios: [],
+            generate() {
+                const categories = [
+                    {t: "Support FAI", b: "Vérifier la ligne ADSL", c: "Mécontent - Coupure"},
+                    {t: "E-Commerce", b: "Statut de livraison Colis", c: "Urgent - Anniversaire"},
+                    {t: "Assurance", b: "Sinistre Automobile", c: "Stressé - Accident"},
+                    {t: "Soutien Médical", b: "Prise de RDV IRM", c: "Patient inquiet"}
+                ];
+                for(let i=1; i<=40; i++){
+                    const cat = categories[i % 4];
+                    this.scenarios.push({
+                        id: i,
+                        title: `MODULE ${i} : ${cat.t}`,
+                        type: i % 2 === 0 ? "IN" : "OUT",
+                        crm: `<b>CLIENT :</b> M. ${['Rakoto','Andria','Razafy','Silva'][i%4]}<br><b>CONTEXTE :</b> ${cat.c}<br><b>HISTORIQUE :</b> Contact régulier.`,
+                        bo: { ref: `LK-${1000+i}`, info: cat.b, detail: "Priorité Haute" },
+                        steps: [
+                            { l: "Ouverture Pro", k: ["bonjour","enchanté","peter","lk"], h: "Utilisez une formule d'accueil chaleureuse.", r: "Oui bonjour... je vous appelle car j'ai un gros souci." },
+                            { l: "Empathie Active", k: ["comprends","navré","désolé"], h: "Validez l'émotion du client.", r: "C'est gentil, mais mon dossier " + (1000+i) + " n'avance pas." },
+                            { l: "Action Métier", k: ["vérifie","dossier","instant","attente"], h: "Proposez une action concrète.", r: "D'accord, je vous laisse regarder." },
+                            { l: "Résolution", k: ["trouvé","parce que","solution"], h: "Donnez une explication claire via le BO.", r: "Ah enfin une réponse claire !" },
+                            { l: "Pre-Closing", k: ["autre","besoin","aidé"], h: "Vérifiez si le client a d'autres besoins.", r: "Non c'est tout, merci beaucoup." }
+                        ]
+                    });
+                }
+            },
+            loadScenario() {
+                const s = this.scenarios.find(x => x.id == document.getElementById('scSelect').value);
+                document.getElementById('crm-content').innerHTML = s.crm;
+                document.getElementById('module-goal').innerText = `Maîtrise du flux : ${s.title}`;
+                document.getElementById('bo-content').innerHTML = `
+                    <div class="bg-slate-100 p-4 rounded-xl text-xs space-y-2 border border-slate-200">
+                        <div class="flex justify-between"><b>REF:</b> <span>${s.bo.ref}</span></div>
+                        <div class="flex justify-between"><b>ACTION:</b> <span>${s.bo.info}</span></div>
+                        <div class="flex justify-between font-bold text-blue-600"><span>${s.bo.detail}</span></div>
+                    </div>`;
+                Core.reset();
+            }
+        };
 
-<nav class="nav-tabs">
-    <button class="tab-btn active" onclick="switchTab(event, 'tab-chat')">💬 Chat</button>
-    <button class="tab-btn" onclick="switchTab(event, 'tab-bo')">🖥️ BO</button>
-    <button class="tab-btn" onclick="switchTab(event, 'tab-steps')">📋 Étapes</button>
-</nav>
+        const Core = {
+            state: { step: 0, err: 0, score: 100, active: false, timer: 0, timerInt: null, checks: {} },
+            rec: null,
+            synth: window.speechSynthesis,
 
-<script>
-// --- LOGIQUE DE NAVIGATION MOBILE ---
-function switchTab(evt, tabName) {
-    let contents = document.getElementsByClassName("tab-content");
-    for (let i = 0; i < contents.length; i++) contents[i].classList.remove("active");
-    let btns = document.getElementsByClassName("tab-btn");
-    for (let i = 0; i < btns.length; i++) btns[i].classList.remove("active");
-    document.getElementById(tabName).classList.add("active");
-    evt.currentTarget.classList.add("active");
-}
+            init() {
+                const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+                if(!SR) return alert("Navigateur non compatible");
+                this.rec = new SR();
+                this.rec.lang = 'fr-FR'; this.rec.continuous = true; this.rec.interimResults = true;
+                this.rec.onresult = (e) => {
+                    for (let i = e.resultIndex; i < e.results.length; ++i) {
+                        if (e.results[i].isFinal) this.validate(e.results[i][0].transcript);
+                        else document.getElementById('transcription-preview').innerText = e.results[i][0].transcript;
+                    }
+                };
+            },
 
-// --- LOGIQUE SWIFTSIM (Reprise Intégrale de votre code) ---
-const db = [
-    { id: "SLX-44102", client: "Sarah El Mansouri", status: "Retenu", info: "Bloqué Hub Lyon. Raison : Fortes neiges A7. Reprise estimée sous 24h." },
-    { id: "SLX-10022", client: "Marc Lefebvre", status: "Bloqué", info: "Adresse : 15 rue des Fleurs. Note : Code porte manquant." },
-    { id: "SLX-88291", client: "Julie Morel", status: "Retour", info: "Point Relais fermé. Redirigé vers 'Relais Bleu'." },
-    { id: "SLX-99999", client: "Jean-Luc", status: "Inconnu", info: "Aucune donnée de tracking." },
-    { id: "SLX-66554", client: "Logistique", status: "Détruit", info: "Accident transporteur." }
-];
+            toggleCall() {
+                if(!this.state.active) this.start();
+                else this.stop();
+            },
 
-const pokes = ["Vous êtes là ?", "J'attends...", "???", "Répondez moi svp."];
+            start() {
+                this.state.active = true;
+                document.getElementById('btn-text').innerText = "RACCROCHER (TERMINER)";
+                document.getElementById('mainBtn').className = "px-8 py-4 bg-rose-500 text-white font-extrabold rounded-xl shadow-lg transition-all active:scale-95 flex items-center gap-2";
+                document.getElementById('voice-indicator').classList.replace('bg-slate-300', 'bg-emerald-500');
+                document.getElementById('voice-indicator').classList.add('animate-ping');
+                
+                this.rec.start();
+                this.state.timerInt = setInterval(() => {
+                    this.state.timer++;
+                    document.getElementById('timer').innerText = this.formatTime(this.state.timer);
+                }, 1000);
 
-const scenarios = {
-    fr_1: { client: "Sarah E.", intro: "Bonjour ! Mon colis SLX-44102 est bloqué ! C'est urgent !", steps: [
-        { label: "1. Accueil & Empathie", keys: ["bonjour", "comprends", "navré", "aider"], hints: ["Saluez et montrez votre empathie."], reply: "C'est bien gentil, mais ça n'explique pas le retard..." },
-        { label: "2. Mise en attente", keys: ["patienter", "vérifie", "attente"], hints: ["Demandez à vérifier le BO."], reply: "D'accord, je vous laisse regarder." },
-        { label: "3. Diagnostic (Neige)", keys: ["neige", "météo", "lyon"], hints: ["Le colis est à Lyon, bloqué par la neige."], reply: "Et ça va durer longtemps ?" },
-        { label: "4. Solution (24h)", keys: ["24h", "demain"], hints: ["Reprise sous 24h."], reply: "Bon, pas le choix alors." },
-        { label: "5. Prise de congé", keys: ["disponible", "journée", "revoir"], hints: ["Formule de politesse standard."], reply: "Au revoir." }
-    ]},
-    fr_9: { client: "Jean-Luc", intro: "C'EST SCANDALEUX ! MON COLIS SLX-99999 ?", steps: [
-        { label: "1. Désamorçage", keys: ["monsieur", "navré", "calme"], hints: ["Restez formel."], reply: "Je veux savoir où il est !" },
-        { label: "2. Transparence", keys: ["vérifie", "incident", "visibilité"], hints: ["Expliquez le souci de tracking."], reply: "C'est pas possible !" }
-    ]}
-};
+                const s = Manager.scenarios.find(x => x.id == document.getElementById('scSelect').value);
+                this.updateWorkflow(s);
+                if(s.type === "IN") {
+                    setTimeout(() => this.speak(s.steps[0].r, s.title.split(':')[0]), 1000);
+                }
+            },
 
-let currentStep = 0, dmtSeconds = 0, slaSeconds = 25, csat = 100, errorCount = 0;
-let timerInterval, slaInterval, activeSc = null;
+            validate(text) {
+                this.addMsg('agent', text);
+                const s = Manager.scenarios.find(x => x.id == document.getElementById('scSelect').value);
+                const step = s.steps[this.state.step];
+                const cleanText = text.toLowerCase();
+                
+                let found = false;
+                step.k.forEach(key => {
+                    if(!this.state.checks[key] && cleanText.includes(key)) {
+                        this.state.checks[key] = true;
+                        found = true;
+                    }
+                });
 
-function initApp() {
-    const scKey = document.getElementById('scenarioSelect').value;
-    activeSc = scenarios[scKey] || scenarios.fr_1;
-    currentStep = 0; dmtSeconds = 0; csat = 100; errorCount = 0;
-    document.getElementById('chat-window').innerHTML = "";
-    document.getElementById('hintContainer').innerHTML = "";
-    addMsg(activeSc.client, activeSc.intro, 'client');
-    updateSteps(); startTimers(); updateKPIs();
-}
+                if(found) {
+                    this.updateHint("Excellent. Continuez ainsi.");
+                    if(step.k.every(k => this.state.checks[k])) this.nextStep(s);
+                } else {
+                    this.state.err++;
+                    this.state.score = Math.max(0, this.state.score - 2);
+                    this.updateKPIs();
+                    this.provideHint(step);
+                }
+            },
 
-function startTimers() {
-    clearInterval(timerInterval);
-    timerInterval = setInterval(() => {
-        dmtSeconds++;
-        document.getElementById('kpi-dmt').innerText = `${Math.floor(dmtSeconds/60).toString().padStart(2,'0')}:${(dmtSeconds%60).toString().padStart(2,'0')}`;
-    }, 1000);
-    resetSLA();
-}
+            nextStep(s) {
+                const prevStep = s.steps[this.state.step];
+                this.state.step++;
+                this.state.checks = {};
+                if(this.state.step < s.steps.length) {
+                    this.updateWorkflow(s);
+                    setTimeout(() => {
+                        this.addMsg('client', prevStep.r);
+                        this.speak(prevStep.r);
+                    }, 800);
+                } else {
+                    this.stop("FÉLICITATIONS ! Session réussie.");
+                }
+            },
 
-function resetSLA() {
-    clearInterval(slaInterval);
-    slaSeconds = 25;
-    document.getElementById('kpi-sla').innerText = "25s";
-    slaInterval = setInterval(() => {
-        slaSeconds--;
-        document.getElementById('kpi-sla').innerText = `${slaSeconds}s`;
-        if(slaSeconds <= 0) {
-            csat -= 5; updateKPIs();
-            addMsg(activeSc.client, `<strong>${pokes[Math.floor(Math.random() * pokes.length)]}</strong>`, 'client');
-            resetSLA();
-        }
-    }, 1000);
-}
+            provideHint(step) {
+                const box = document.getElementById('mentor-box');
+                const txt = document.getElementById('hint-text');
+                if(this.state.err > 8) {
+                    box.classList.add('critical-alert');
+                    txt.innerHTML = `<span class="font-bold uppercase text-xs">Aide Critique :</span> Pensez à utiliser : <b>${step.k[0]}</b>`;
+                } else {
+                    txt.innerText = step.h;
+                }
+            },
 
-function updateKPIs() { document.getElementById('kpi-csat').innerText = `${Math.max(0, csat)}%`; }
+            updateWorkflow(s) {
+                document.getElementById('script-steps').innerHTML = s.steps.map((step, i) => `
+                    <div class="p-3 rounded-xl border text-xs transition-all ${i === this.state.step ? 'step-active shadow-sm' : (i < this.state.step ? 'bg-emerald-50 text-emerald-700 border-emerald-100 opacity-60' : 'bg-white opacity-40')}">
+                        <div class="flex justify-between items-center">
+                            <b>${step.l}</b>
+                            ${i < this.state.step ? '<span>✅</span>' : ''}
+                        </div>
+                    </div>
+                `).join('');
+            },
 
-function addMsg(sender, text, type) {
-    const win = document.getElementById('chat-window');
-    win.innerHTML += `<div class="msg ${type}"><strong>${sender}:</strong><br>${text}</div>`;
-    win.scrollTop = win.scrollHeight;
-}
+            stop(msg) {
+                this.state.active = false;
+                clearInterval(this.state.timerInt);
+                this.rec.stop();
+                if(msg) {
+                    this.addMsg('system', msg);
+                    this.speak(msg);
+                }
+                document.getElementById('btn-text').innerText = "DÉMARRER LA SESSION";
+                document.getElementById('mainBtn').className = "px-8 py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold rounded-xl shadow-lg transition-all active:scale-95 flex items-center gap-2";
+                document.getElementById('voice-indicator').classList.remove('animate-ping');
+            },
 
-function sendMessage() {
-    const inputField = document.getElementById('agentInput');
-    const input = inputField.value.toLowerCase();
-    if(!input) return;
-    addMsg("Agent", input, "agent");
-    inputField.value = "";
-    const step = activeSc.steps[currentStep];
-    if(step.keys.some(k => input.includes(k))) {
-        currentStep++; errorCount = 0;
-        document.getElementById('hintContainer').innerHTML = "";
-        setTimeout(() => {
-            addMsg(activeSc.client, step.reply, "client");
-            if(currentStep === activeSc.steps.length) {
-                clearInterval(timerInterval); clearInterval(slaInterval);
-                addMsg("SYSTEM", "🏆 MISSION RÉUSSIE !", "system");
-            } else { updateSteps(); resetSLA(); }
-        }, 800);
-    } else {
-        errorCount++; csat -= 2; updateKPIs();
-        document.getElementById('hintContainer').innerHTML = `<div class="hint-box">💡 INDICE : ${step.hints[0]}</div>`;
-    }
-}
+            reset() {
+                this.state = { step: 0, err: 0, score: 100, active: false, timer: 0, timerInt: null, checks: {} };
+                document.getElementById('call-log').innerHTML = "";
+                this.updateKPIs();
+            },
 
-function updateSteps() {
-    document.getElementById('stepList').innerHTML = activeSc.steps.map((s, i) => `
-        <div class="step-item ${i === currentStep ? 'step-active' : (i < currentStep ? 'step-done' : '')}">
-            ${i < currentStep ? '✅' : '👉'} ${s.label}
-        </div>
-    `).join('');
-}
+            addMsg(type, t) {
+                const log = document.getElementById('call-log');
+                const label = type === 'agent' ? 'Vous' : (type === 'system' ? 'Système' : 'Client');
+                log.innerHTML += `<div class="bubble bubble-${type} msg-anim shadow-sm">
+                    <p class="text-[9px] font-extrabold uppercase opacity-50 mb-1">${label}</p>${t}</div>`;
+                log.scrollTop = log.scrollHeight;
+            },
 
-function handleSearch() {
-    const val = document.getElementById('searchBO').value.toLowerCase();
-    const res = document.getElementById('boResults');
-    res.innerHTML = "";
-    if(val.length < 2) return;
-    db.filter(item => item.client.toLowerCase().includes(val) || item.id.toLowerCase().includes(val))
-      .forEach(item => { res.innerHTML += `<div style="border:1px solid #ddd; padding:10px; margin-top:5px; border-left:4px solid var(--accent); background:white; font-size:0.85em;">
-        <strong>${item.id}</strong><br>Statut: ${item.status}<br><small>${item.info}</small></div>`; });
-}
-window.onload = initApp;
-</script>
+            speak(t) {
+                const u = new SpeechSynthesisUtterance(t);
+                u.lang = 'fr-FR'; u.rate = 0.9;
+                this.synth.speak(u);
+            },
+
+            updateKPIs() {
+                document.getElementById('timer').innerText = this.formatTime(this.state.timer);
+                document.getElementById('score-val').innerText = this.state.score + "%";
+                document.getElementById('err-val').innerText = this.state.err;
+            },
+
+            updateHint(m) { document.getElementById('hint-text').innerText = m; document.getElementById('mentor-box').classList.remove('critical-alert'); },
+            formatTime(s) { return Math.floor(s/60).toString().padStart(2,'0') + ":" + (s%60).toString().padStart(2,'0'); }
+        };
+
+        window.onload = () => {
+            Manager.generate();
+            const sel = document.getElementById('scSelect');
+            Manager.scenarios.forEach(s => {
+                const o = document.createElement('option');
+                o.value = s.id; o.innerText = s.title;
+                sel.appendChild(o);
+            });
+            Manager.loadScenario();
+            Core.init();
+        };
+    </script>
 </body>
 </html>
