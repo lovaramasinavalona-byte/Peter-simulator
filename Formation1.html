@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>SwiftSim Elite 🚀 - Coaching & Stress Test</title>
+    <style>
+        :root { --primary: #2c3e50; --accent: #3498db; --success: #27ae60; --danger: #e74c3c; --warning: #f39c12; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f0f2f5; display: flex; flex-direction: column; height: 100vh; }
+        .kpi-bar { background: #1a252f; color: white; padding: 10px 20px; display: flex; justify-content: space-around; font-size: 0.9em; border-bottom: 3px solid var(--accent); }
+        .kpi-value { display: block; font-size: 1.2em; font-weight: bold; color: var(--warning); }
+        header { background: var(--primary); color: white; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; }
+        main { display: grid; grid-template-columns: 350px 1fr 380px; gap: 10px; padding: 10px; flex-grow: 1; overflow: hidden; }
+        .panel { background: white; border-radius: 8px; display: flex; flex-direction: column; overflow: hidden; border: 1px solid #ddd; }
+        .panel-header { background: #f8f9fa; padding: 10px; font-weight: bold; border-bottom: 1px solid #eee; }
+        #chat-window { flex-grow: 1; padding: 15px; overflow-y: auto; background: white; display: flex; flex-direction: column; gap: 10px; }
+        .msg { max-width: 80%; padding: 10px; border-radius: 10px; font-size: 0.95em; line-height: 1.4; }
+        .msg.client { background: #eee; align-self: flex-start; border-left: 4px solid #ccc; }
+        .msg.agent { background: var(--accent); color: white; align-self: flex-end; }
+        .msg.system { background: #fff3cd; color: #856404; align-self: center; font-size: 0.8em; padding: 5px 15px; border-radius: 20px; text-align: center; border: 1px solid #ffeeba; }
+        .hint-box { background: #fff9c4; color: #7f8c0d; padding: 10px; margin-top: 10px; border-radius: 5px; font-size: 0.85em; border: 1px solid #fbc02d; font-weight: 500; }
+        .step-item { padding: 8px; margin-bottom: 5px; border-radius: 4px; background: #f9f9f9; border-left: 3px solid #ccc; font-size: 0.78em; line-height: 1.3; }
+        .step-active { background: #e3f2fd; border-left-color: var(--accent); font-weight: bold; border: 1px solid #bbdefb; }
+        .step-done { background: #e8f5e9; border-left-color: var(--success); color: #2e7d32; opacity: 0.7; }
+        .input-area { padding: 15px; border-top: 1px solid #eee; }
+        textarea { width: 100%; height: 60px; padding: 10px; border-radius: 5px; border: 1px solid #ddd; resize: none; box-sizing: border-box; }
+    </style>
+</head>
+<body>
+
+<div class="kpi-bar">
+    <div class="kpi-item">DMT <span id="kpi-dmt" class="kpi-value">00:00</span></div>
+    <div class="kpi-item">SLA RÉPONSE <span id="kpi-sla" class="kpi-value">25s</span></div>
+    <div class="kpi-item">SATISFACTION (CSAT) <span id="kpi-csat" class="kpi-value">100%</span></div>
+</div>
+
+<header>
+    <div><strong>SwiftSim Elite 🚀 - Expert Training</strong></div>
+    <div>
+        <select id="scenarioSelect" onchange="initApp()" style="padding:5px;">
+            <optgroup label="Simulations de Traitement">
+                <option value="fr_1">Cas 1: Neige A7 (Sarah)</option>
+                <option value="fr_2">Cas 2: Adresse Incomplète (Marc)</option>
+                <option value="fr_3">Cas 3: Relais Fermé (Julie)</option>
+                <option value="fr_4">Cas 4: Colis Endommagé (Yassine)</option>
+                <option value="fr_5">Cas 5: Erreur de Tri (Léa)</option>
+                <option value="fr_6">Cas 6: Retard Douane (Kevin)</option>
+                <option value="fr_7">Cas 7: Vol de Colis (Mme Robert)</option>
+                <option value="fr_8">Cas 8: Urgent Médical (Dr. House)</option>
+                <option value="fr_9">Cas 9: Client Agressif (Jean-Luc)</option>
+                <option value="fr_10">Cas 10: Camion Accidenté (Logistique)</option>
+            </optgroup>
+        </select>
+        <button onclick="initApp()" style="padding:5px 15px; cursor:pointer; font-weight:bold;">LANCER SESSION</button>
+    </div>
+</header>
+
+<main>
+    <section class="panel">
+        <div class="panel-header">Système Back-Office</div>
+        <div style="padding:10px;">
+            <input type="text" id="searchBO" placeholder="Saisir n° colis..." onkeyup="handleSearch()" style="width:100%; padding:8px; box-sizing:border-box;">
+            <div id="boResults"></div>
+        </div>
+    </section>
+
+    <section class="panel">
+        <div class="panel-header">Chat Client</div>
+        <div id="chat-window"></div>
+        <div class="input-area">
+            <textarea id="agentInput" placeholder="Tapez votre réponse..."></textarea>
+            <button onclick="sendMessage()" style="width:100%; margin-top:5px; background:var(--success); color:white; border:none; padding:10px; border-radius:5px; cursor:pointer; font-weight:bold;">ENVOYER</button>
+        </div>
+    </section>
+
+    <section class="panel">
+        <div class="panel-header">Processus de Traitement</div>
+        <div id="stepList" style="padding:10px;"></div>
+        <div id="hintContainer" style="padding:10px;"></div>
+    </section>
+</main>
+
+<script>
+const db = [
+    { id: "SLX-44102", client: "Sarah El Mansouri", status: "Retenu", info: "Bloqué Hub Lyon. Raison : Fortes neiges A7. Reprise estimée sous 24h." },
+    { id: "SLX-10022", client: "Marc Lefebvre", status: "Bloqué", info: "Adresse : 15 rue des Fleurs. Note : Code porte manquant." },
+    { id: "SLX-88291", client: "Julie Morel", status: "Retour", info: "Point Relais fermé. Doit être redirigé vers 'Relais Bleu' (Rue de la Gare)." },
+    { id: "SLX-55432", client: "Yassine", status: "Livré", info: "Livraison 03/03. Note : Emballage mouillé mais contenu intact ?" },
+    { id: "SLX-22900", client: "Léa", status: "Transit", info: "Erreur de tri. Actuellement à Lille. Prévu à Marseille." },
+    { id: "SLX-99887", client: "Kevin", status: "Douane", info: "Bloqué Roissy. Motif : Valeur déclarée manquante." },
+    { id: "SLX-00700", client: "Mme Robert", status: "Perdu", info: "Enquête : Colis non scanné au déchargement. Perte confirmée." },
+    { id: "SLX-11111", client: "Dr. House", status: "Urgent", info: "Médicaments froids. Bloqué tri 4. Sortie manuelle requise." },
+    { id: "SLX-99999", client: "Jean-Luc", status: "Inconnu", info: "Aucune donnée de tracking. Incident informatique." },
+    { id: "SLX-66554", client: "Logistique", status: "Détruit", info: "Accident transporteur. Procédure remboursement auto activée." }
+];
+
+const pokes = [
+    "Vous êtes là ?", "J'attends...", "???", "Merci de me répondre au plus vite.", "C'est frustrant de ne pas avoir de réponse.",
+    "Est-ce que vous m'ignorez ?", "Il y a quelqu'un au bout du fil ?", "Je n'ai pas la journée.", "Répondez moi svp."
+];
+
+const scenarios = {
+    fr_1: { client: "Sarah E.", intro: "Bonjour ! Mon colis SLX-44102 est bloqué ! C'est urgent !", steps: [
+        { label: "1. Accueil & Empathie : Saluer et montrer que vous comprenez l'urgence (Posture BPO).", keys: ["bonjour", "comprends", "navré", "aider"], hints: ["Exprimez votre regret face au retard dès le début."], reply: "C'est bien gentil, mais ça n'explique pas le retard..." },
+        { label: "2. Mise en attente / Justification SLA : S'excuser pour l'attente si le délai dépasse et demander à patienter pour vérification BO.", keys: ["patienter", "vérifie", "attente", "recherche"], hints: ["Si vous avez été lent, excusez-vous. Dites que vous allez chercher l'info."], reply: "D'accord, je vous laisse regarder." },
+        { label: "3. Diagnostic BO & Explication : Calmer le client en donnant la cause réelle (Neige).", keys: ["neige", "météo", "autoroute", "lyon"], hints: ["Consultez le BO : le colis est à Lyon, bloqué par la neige."], reply: "Et ça va durer longtemps ?" },
+        { label: "4. Solution concrète : Proposer le délai de reprise estimé.", keys: ["24h", "demain", "repartir"], hints: ["Le BO indique une reprise sous 24h."], reply: "Bon, pas le choix alors." },
+        { label: "5. Prise de congé : Souhaiter une bonne journée et valider la satisfaction.", keys: ["disponible", "plaisir", "journée", "au revoir"], hints: ["Finissez par une formule de politesse standard."], reply: "Au revoir." }
+    ]},
+    fr_9: { client: "Jean-Luc", intro: "C'EST SCANDALEUX ! VOUS ÊTES DES INCOMPÉTENTS ! MON COLIS SLX-99999 ?", steps: [
+        { label: "1. Désamorçage : Garder son calme, ne pas répondre à l'attaque et rester très formel.", keys: ["monsieur", "navré", "calme", "comprends"], hints: ["Dites 'Je regrette votre mécontentement Monsieur' pour instaurer une distance pro."], reply: "Je me fiche de vos regrets ! Je veux savoir où il est !" },
+        { label: "2. Analyse BO & Transparence : Expliquer l'absence de données sans mentir.", keys: ["vérifie", "tracking", "incident", "visibilité"], hints: ["Le BO n'a aucune info. Expliquez qu'il y a un souci de tracking."], reply: "Et vous trouvez ça normal ?!" },
+        { label: "3. Escalade Expertise : Proposer une solution de secours (transfert superviseur).", keys: ["responsable", "expert", "priorité", "remonter"], hints: ["Proposez de faire remonter le dossier en priorité."], reply: "Faites ça vite !" },
+        { label: "4. Prise de congé pro : Valider la clôture malgré la tension.", keys: ["reviens", "disponible", "journée"], hints: ["Restez poli même s'il ne l'est pas."], reply: "J'espère bien." }
+    ]},
+    fr_10: { client: "Logistique (Service)", intro: "Bonjour, j'appelle pour le colis SLX-66554. Le client attend.", steps: [
+        { label: "1. Accueil Pro : Salutation neutre et professionnelle.", keys: ["bonjour", "aide", "écouter"], hints: ["Salutation simple et pro."], reply: "Quelles sont les nouvelles ?" },
+        { label: "2. Annonce de l'incident : Annoncer la destruction du colis (Accident).", keys: ["accident", "détruit", "dommage"], hints: ["Regardez le BO : le camion a eu un accident."], reply: "Oh non... Quelle est la suite ?" },
+        { label: "3. Solution de compensation : Annoncer le remboursement automatique.", keys: ["remboursement", "auto", "dédommagement"], hints: ["Le BO dit 'remboursement auto activé'."], reply: "C'est noté, je transmets." },
+        { label: "4. Clôture métier : Salutation entre collègues/services.", keys: ["disponible", "journée"], hints: ["Saluez."], reply: "Merci, à bientôt." }
+    ]}
+};
+
+// Logique Système Inchangée
+let currentStep = 0, dmtSeconds = 0, slaSeconds = 25, csat = 100, errorCount = 0;
+let timerInterval, slaInterval, activeSc = null;
+
+function initApp() {
+    const scKey = document.getElementById('scenarioSelect').value;
+    activeSc = scenarios[scKey] || scenarios.fr_1;
+    currentStep = 0; dmtSeconds = 0; csat = 100; errorCount = 0;
+    document.getElementById('chat-window').innerHTML = "";
+    document.getElementById('hintContainer').innerHTML = "";
+    addMsg(activeSc.client, activeSc.intro, 'client');
+    updateSteps(); startTimers(); updateKPIs();
+}
+
+function startTimers() {
+    clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+        dmtSeconds++;
+        document.getElementById('kpi-dmt').innerText = `${Math.floor(dmtSeconds/60).toString().padStart(2,'0')}:${(dmtSeconds%60).toString().padStart(2,'0')}`;
+    }, 1000);
+    resetSLA();
+}
+
+function resetSLA() {
+    clearInterval(slaInterval);
+    slaSeconds = 25;
+    document.getElementById('kpi-sla').innerText = "25s";
+    document.getElementById('kpi-sla').style.color = "var(--warning)";
+    slaInterval = setInterval(() => {
+        slaSeconds--;
+        document.getElementById('kpi-sla').innerText = `${slaSeconds}s`;
+        if(slaSeconds <= 5) document.getElementById('kpi-sla').style.color = "var(--danger)";
+        if(slaSeconds <= 0) {
+            csat -= 5; updateKPIs();
+            const poke = pokes[Math.floor(Math.random() * pokes.length)];
+            addMsg(activeSc.client, `<strong>${poke}</strong>`, 'client');
+            resetSLA();
+        }
+    }, 1000);
+}
+
+function updateKPIs() { document.getElementById('kpi-csat').innerText = `${Math.max(0, csat)}%`; }
+
+function addMsg(sender, text, type) {
+    const win = document.getElementById('chat-window');
+    win.innerHTML += `<div class="msg ${type}"><strong>${sender}:</strong><br>${text}</div>`;
+    win.scrollTop = win.scrollHeight;
+}
+
+function sendMessage() {
+    const input = document.getElementById('agentInput').value.toLowerCase();
+    if(!input) return;
+    addMsg("Agent", input, "agent");
+    document.getElementById('agentInput').value = "";
+    const step = activeSc.steps[currentStep];
+    const success = step.keys.some(k => input.includes(k));
+    if(success) {
+        currentStep++; errorCount = 0;
+        document.getElementById('hintContainer').innerHTML = "";
+        setTimeout(() => {
+            addMsg(activeSc.client, step.reply, "client");
+            if(currentStep === activeSc.steps.length) {
+                clearInterval(timerInterval); clearInterval(slaInterval);
+                addMsg("SYSTEM", "🏆 MISSION RÉUSSIE ! CSAT : " + csat + "%", "system");
+            } else { updateSteps(); resetSLA(); }
+        }, 800);
+    } else {
+        errorCount++; csat -= 2; updateKPIs();
+        const hintIdx = Math.min(errorCount - 1, step.hints.length - 1);
+        document.getElementById('hintContainer').innerHTML = `<div class="hint-box">💡 <strong>MÉTHODOLOGIE :</strong><br>${step.hints[hintIdx]}</div>`;
+    }
+}
+
+function updateSteps() {
+    document.getElementById('stepList').innerHTML = activeSc.steps.map((s, i) => `
+        <div class="step-item ${i === currentStep ? 'step-active' : (i < currentStep ? 'step-done' : '')}">
+            ${i < currentStep ? '✅' : '👉'} ${s.label}
+        </div>
+    `).join('');
+}
+
+function handleSearch() {
+    const val = document.getElementById('searchBO').value.toLowerCase();
+    const res = document.getElementById('boResults');
+    res.innerHTML = "";
+    if(val.length < 2) return;
+    db.filter(item => item.client.toLowerCase().includes(val) || item.id.toLowerCase().includes(val))
+      .forEach(item => { res.innerHTML += `<div style="border:1px solid #eee; padding:10px; margin-top:5px; border-left:4px solid var(--accent); font-size:0.85em; background:#fcfcfc;">
+        <span style="color:var(--accent); font-weight:bold;">${item.id}</span> - ${item.client}<br>
+        <b>Statut :</b> ${item.status}<br>
+        <i style="color:#666;">Note BO : ${item.info}</i></div>`; });
+}
+window.onload = initApp;
+</script>
+</body>
+</html>
